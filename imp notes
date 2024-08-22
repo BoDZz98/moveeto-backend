@@ -1,0 +1,5 @@
+- notice the tsconfig.json , changed the target, moduleResolution, outDir, rootDir
+
+- when we finish writing the code we must compile our ts files into js files using command -> tsc, the compiled js files will be found in /dist as we specified in tsconfig.json
+
+-
