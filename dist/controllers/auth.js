@@ -1,77 +1,74 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.signup = void 0;
-// const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
-// const User = require('../models/user');
-const signup = (req, res, next) => {
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   const error = new Error('Validation failed.');
-    //   error.statusCode = 422;
-    //   error.data = errors.array();
-    //   throw error;
-    // }
-    // const email = req.body.email;
-    // const name = req.body.name;
-    // const password = req.body.password;
-    // bcrypt
-    //   .hash(password, 12)
-    //   .then(hashedPw => {
-    //     const user = new User({
-    //       email: email,
-    //       password: hashedPw,
-    //       name: name
-    //     });
-    //     return user.save();
-    //   })
-    //   .then(result => {
-    //     res.status(201).json({ message: 'User created!', userId: result._id });
-    //   })
-    //   .catch(err => {
-    //     if (!err.statusCode) {
-    //       err.statusCode = 500;
-    //     }
-    //     next(err);
-    //   });
-};
+const express_validator_1 = require("express-validator");
+const userModel_1 = __importDefault(require("../models/userModel"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const errors = (0, express_validator_1.validationResult)(req);
+    const reqBody = req.body; // vip
+    // Checking if there is errors in the validation
+    if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg);
+        const message = errors.array()[0].msg;
+        return res.status(400).json({ message });
+    }
+    const { name, email, password } = reqBody;
+    try {
+        const hashedPw = yield bcrypt_1.default.hash(password, 10);
+        const newuser = yield userModel_1.default.create({
+            name,
+            email,
+            password: hashedPw,
+        });
+        return res
+            .status(201)
+            .json({ message: "User created!", userId: newuser._id });
+    }
+    catch (error) {
+        console.log("error while signing up", error);
+        return res.status(500).json({ message: error });
+    }
+});
 exports.signup = signup;
-const login = (req, res, next) => {
-    // const body=req.body as {}   // vip
-    // const email = req.body.email;
-    // const password = req.body.password;
-    // let loadedUser;
-    // User.findOne({ email: email })
-    //   .then(user => {
-    //     if (!user) {
-    //       const error = new Error('A user with this email could not be found.');
-    //       error.statusCode = 401;
-    //       throw error;
-    //     }
-    //     loadedUser = user;
-    //     return bcrypt.compare(password, user.password);
-    //   })
-    //   .then(isEqual => {
-    //     if (!isEqual) {
-    //       const error = new Error('Wrong password!');
-    //       error.statusCode = 401;
-    //       throw error;
-    //     }
-    //     const token = jwt.sign(
-    //       {
-    //         email: loadedUser.email,
-    //         userId: loadedUser._id.toString()
-    //       },
-    //       'somesupersecretsecret',
-    //       { expiresIn: '1h' }
-    //     );
-    //     res.status(200).json({ token: token, userId: loadedUser._id.toString() });
-    //   })
-    //   .catch(err => {
-    //     if (!err.statusCode) {
-    //       err.statusCode = 500;
-    //     }
-    //     next(err);
-    //   });
-};
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const reqBody = req.body; // vip
+    const { email, password } = reqBody;
+    try {
+        // Cheking Email
+        const user = yield userModel_1.default.findOne({ email: email });
+        if (!user) {
+            const message = "A user with this email could not be found";
+            return res.status(400).json({ message });
+        }
+        // Checking pass
+        const isCorrect = yield bcrypt_1.default.compare(password, user.password);
+        if (!isCorrect)
+            return res.status(400).json({ message: "Wrong password" });
+        // Creating token
+        const token = jsonwebtoken_1.default.sign({
+            email: email,
+            userId: user._id.toString(),
+        }, "somesupersecretsecret", { expiresIn: "1h" });
+        res.status(200).json({ token, user });
+        return user;
+    }
+    catch (error) {
+        console.log("error while logging in");
+        return res.status(500).json({ message: error });
+    }
+});
 exports.login = login;

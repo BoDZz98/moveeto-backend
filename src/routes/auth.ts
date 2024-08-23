@@ -6,7 +6,7 @@ import User from "../models/userModel";
 
 const router = Router();
 
-router.put(
+router.post(
   "/signup",
   [
     body("email")
@@ -20,8 +20,11 @@ router.put(
         });
       })
       .normalizeEmail(),
-    body("password").trim().isLength({ min: 5 }),
-    body("name").trim().not().isEmpty(),
+    body("password")
+      .trim()
+      .isLength({ min: 5 })
+      .withMessage("Password is too short "),
+    body("name").trim().not().isEmpty().withMessage('Name can\'t be empty'),
   ],
   signup
 );

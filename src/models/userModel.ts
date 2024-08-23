@@ -15,7 +15,7 @@ const userCollectionsSchema = new Schema(
     name: {
       type: String,
       // sparse: true,
-      unique: [true, "Collection name already exists"],
+      // unique: [true, "Collection name already exists"],
     },
     description: String,
     movies: [movieSchema],
@@ -23,7 +23,7 @@ const userCollectionsSchema = new Schema(
   { timestamps: true }
 );
 
-const userSchema = new Schema(
+const userSchemaa = new Schema(
   {
     name: { type: String, required: [true, "Please provide your name"] },
     email: {
@@ -35,6 +35,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Please provide your password"],
     },
+    // userCollections: { type: [userCollectionsSchema], required: false }, // array of objects with collection
     userCollections: [userCollectionsSchema], // array of objects with collection
     favMovies: [movieSchema],
     wishlistMovies: [movieSchema],
@@ -43,7 +44,7 @@ const userSchema = new Schema(
 );
 // module.exports
 
-const User = mongoose.models?.User || mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchemaa);
 
 export default User;
 
