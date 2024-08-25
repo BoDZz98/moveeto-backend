@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.signup = void 0;
+exports.getUser = exports.login = exports.signup = void 0;
 const express_validator_1 = require("express-validator");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -63,8 +63,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             email: email,
             userId: user._id.toString(),
         }, "somesupersecretsecret", { expiresIn: "1h" });
-        res.status(200).json({ token, user });
-        return user;
+        return res.status(200).json({ token, user });
     }
     catch (error) {
         console.log("error while logging in");
@@ -72,3 +71,17 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
+const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("in here");
+    const userId = req.params.userId;
+    try {
+        const user = yield userModel_1.default.findById(userId);
+        console.log("user is", user);
+        return res.status(200).json({ user });
+    }
+    catch (error) {
+        console.log("Error while fetching user", error);
+        return res.status(500).json({ message: error });
+    }
+});
+exports.getUser = getUser;

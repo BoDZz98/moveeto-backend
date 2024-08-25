@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 app.use("/auth", auth_1.default);
 app.use("/reviews", reviews_1.default);
 mongoose_1.default
-    .connect("mongodb+srv://boudy1q1q:boudy1q1q@cluster0.m2fmta0.mongodb.net/moveetomobile?retryWrites=true&w=majority&appName=Cluster0")
+    .connect("mongodb+srv://boudy1q1q:boudy1q1q@cluster0.m2fmta0.mongodb.net/moveeto?retryWrites=true&w=majority&appName=Cluster0")
     .then(() => {
     app.listen(process.env.PORT, () => {
         console.log("server is running on port", process.env.PORT);

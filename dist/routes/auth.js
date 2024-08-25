@@ -27,4 +27,6 @@ router.post("/signup", [
     (0, express_validator_1.body)("name").trim().not().isEmpty().withMessage('Name can\'t be empty'),
 ], auth_1.signup);
 router.post("/login", auth_1.login);
+// get user
+router.get("/users/:userId", auth_1.getUser);
 exports.default = router;

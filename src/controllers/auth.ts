@@ -59,11 +59,23 @@ export const login = async (req: Request, res: Response) => {
       "somesupersecretsecret",
       { expiresIn: "1h" }
     );
-    res.status(200).json({ token, user });
-
-    return user;
+    return res.status(200).json({ token, user });
   } catch (error) {
     console.log("error while logging in");
+    return res.status(500).json({ message: error });
+  }
+};
+
+export const getUser = async (req: Request, res: Response) => {
+  console.log("in here");
+
+  const userId = req.params.userId;
+  try {
+    const user = await User.findById(userId);
+    // console.log("user is", user);
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.log("Error while fetching user", error);
     return res.status(500).json({ message: error });
   }
 };
