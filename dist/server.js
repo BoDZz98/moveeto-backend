@@ -9,6 +9,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const reviews_1 = __importDefault(require("./routes/reviews"));
+const lists_1 = __importDefault(require("./routes/lists"));
 // import cors from "cors";
 const app = (0, express_1.default)();
 dotenv_1.default.config(); // to be able to use data in .env
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 });
 app.use("/auth", auth_1.default);
 app.use("/reviews", reviews_1.default);
+app.use("/lists", lists_1.default);
 mongoose_1.default
     .connect("mongodb+srv://boudy1q1q:boudy1q1q@cluster0.m2fmta0.mongodb.net/moveeto?retryWrites=true&w=majority&appName=Cluster0")
     .then(() => {

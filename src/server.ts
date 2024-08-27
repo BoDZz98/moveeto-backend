@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import authRoutes from "./routes/auth";
 import reviewsRoutes from "./routes/reviews";
+import listsRoutes from "./routes/lists";
 
 // import cors from "cors";
 const app = express();
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
 
 app.use("/auth", authRoutes);
 app.use("/reviews", reviewsRoutes);
-
+app.use("/lists", listsRoutes);
 
 mongoose
   .connect(

@@ -8,6 +8,9 @@ const movieSchema = new Schema({
   backdrop_path: String,
   genres: [String],
   vote_count: Number,
+  rating: Number,
+  runtime: String,
+  poster: String,
 });
 
 const userCollectionsSchema = new Schema(

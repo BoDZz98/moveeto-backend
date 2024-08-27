@@ -72,11 +72,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.login = login;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("in here");
     const userId = req.params.userId;
     try {
         const user = yield userModel_1.default.findById(userId);
-        console.log("user is", user);
+        // console.log("user is", user);
         return res.status(200).json({ user });
     }
     catch (error) {

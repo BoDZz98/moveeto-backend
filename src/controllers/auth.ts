@@ -67,8 +67,6 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const getUser = async (req: Request, res: Response) => {
-  console.log("in here");
-
   const userId = req.params.userId;
   try {
     const user = await User.findById(userId);
