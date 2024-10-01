@@ -61,11 +61,11 @@ export type userMovieObj = {
 };
 
 export type collectionObj = {
-  _id: string;
+  _id?: string;
   name: string;
   description: string;
   movies: Array<userMovieObj>;
-  createdAt: string;
+  createdAt?: string;
 };
 
 export type userObj = {
