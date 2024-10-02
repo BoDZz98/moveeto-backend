@@ -1,10 +1,11 @@
 import { Router } from "express";
 import {
   addMovie,
-  addMovieToUserList,
+  manageMovieInUserList,
   removeMovie,
   createUserList,
   deleteUserList,
+  updateUserList,
 } from "../controllers/lists";
 
 const router = Router();
@@ -16,7 +17,8 @@ router.delete("/movie", removeMovie);
 // user Lists
 router.post("/userLists", createUserList);
 router.delete("/userLists", deleteUserList);
+router.patch("/userLists/", updateUserList);
 
-router.post("/userLists/movie", addMovieToUserList);
+router.post("/userLists/manageMovie", manageMovieInUserList); // Adding/removing movies
 
 export default router;

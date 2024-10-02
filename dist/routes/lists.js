@@ -9,5 +9,6 @@ router.delete("/movie", lists_1.removeMovie);
 // user Lists
 router.post("/userLists", lists_1.createUserList);
 router.delete("/userLists", lists_1.deleteUserList);
-router.post("/userLists/movie", lists_1.addMovieToUserList);
+router.patch("/userLists/", lists_1.updateUserList);
+router.post("/userLists/manageMovie", lists_1.manageMovieInUserList); // Adding/removing movies
 exports.default = router;

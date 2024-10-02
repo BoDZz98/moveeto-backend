@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import User, { userMovieObj, userObj } from "../models/userModel";
+import User, {
+  collectionObj,
+  userMovieObj,
+  userObj,
+} from "../models/userModel";
 
 type reqData = {
   userId: string;
@@ -65,12 +69,14 @@ export const createUserList = async (req: Request, res: Response) => {
         return res.status(201).json({ message: "created", user });
       }
 
-      res.status(400).json({ message: "list name already exist" });
+      return res.status(400).json({ message: "list name already exist" });
 
       //   console.log(user);
     } catch (error) {
       console.log("error while creating collection", error);
-      res.status(500).json({ message: "error while creating collection" });
+      return res
+        .status(500)
+        .json({ message: "error while creating collection" });
     }
   }
 };
@@ -93,5 +99,71 @@ export const deleteUserList = async (req: Request, res: Response) => {
     }
   }
 };
+export const updateUserList = async (req: Request, res: Response) => {
+  const { userId, oldListName, newListName } = (await req.body) as {
+    userId: string;
+    oldListName: string;
+    newListName: string;
+  };
+  try {
+    const user: userObj | null = await User.findById(userId);
 
-export const addMovieToUserList = async (req: Request, res: Response) => {};
+    if (user) {
+      
+      const collectionFound = user?.userCollections.find(
+        (c) => c.name === newListName
+      );
+      if (collectionFound) {
+        return res.status(400).json({ message: "list name already exist" });
+      }
+
+      const collection = user.userCollections.find(
+        (c) => c.name === oldListName
+      );
+      collection!.name = newListName;
+      user.save();
+      return res.status(201).json({ message: "collection updated", user });
+    }
+  } catch (error) {
+    console.log("error while updating collection" + error);
+    return res.status(500).json({ message: "error while updating collection" });
+  }
+};
+
+export const manageMovieInUserList = async (req: Request, res: Response) => {
+  const { userId, collectionId, movie } = (await req.body) as {
+    userId: string;
+    collectionId: string;
+    movie: userMovieObj;
+  };
+  // console.log(userId, collectionId, movie);
+
+  const user: userObj | null = await User.findById(userId);
+  if (user) {
+    const collection: collectionObj | undefined = user.userCollections.find(
+      (c) => c._id == collectionId
+    );
+
+    const movieIndex = collection!.movies.findIndex((m) => m.id == movie.id);
+
+    try {
+      // If the movie is not found, we should add it
+      if (movieIndex === -1) {
+        collection?.movies.push(movie);
+        user.save();
+        return res.status(201).json({ message: "movie added", user });
+      }
+      // The movie is found, so we should remove it
+      else {
+        collection?.movies.splice(movieIndex, 1);
+        user.save();
+        return res.status(201).json({ message: "movie removed", user });
+      }
+    } catch (error) {
+      console.log("error while add/remove movie in collection", error);
+      res
+        .status(500)
+        .json({ message: "error while add/remove movie in collection" });
+    }
+  }
+};
