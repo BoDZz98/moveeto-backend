@@ -4,4 +4,8 @@ const express_1 = require("express");
 const reviews_1 = require("../controllers/reviews");
 const router = (0, express_1.Router)();
 router.get("/getUserReviews/:email", reviews_1.getUserReviews);
+router.get("/getMovieReviews/:movieId", reviews_1.getMovieReviews);
+router.post("/createReview", reviews_1.createReview);
+router.patch("/updateReview", reviews_1.updateReview);
+router.delete("/deleteReview", reviews_1.deleteReview);
 exports.default = router;

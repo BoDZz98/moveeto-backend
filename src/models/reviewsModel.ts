@@ -4,8 +4,10 @@ var Schema = mongoose.Schema;
 const reviewSchema = new Schema(
   {
     username: String,
+    email: String,
     movieId: String,
     movieName: String,
+    moviePoster: String,
     rating: String,
     description: String,
   },

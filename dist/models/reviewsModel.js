@@ -7,8 +7,10 @@ const mongoose_1 = __importDefault(require("mongoose"));
 var Schema = mongoose_1.default.Schema;
 const reviewSchema = new Schema({
     username: String,
+    email: String,
     movieId: String,
     movieName: String,
+    moviePoster: String,
     rating: String,
     description: String,
 }, { timestamps: true });
